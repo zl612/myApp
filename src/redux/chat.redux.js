@@ -35,7 +35,7 @@ const initState={
  }
 
  export function getMsgList() {
-   return dispatch => {
+   return async function(dispatch) {
      axios.get('/user/getmsglist')
       .then(res => {
         if (res.state == 200 && res.data.code == 0) {

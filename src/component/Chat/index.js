@@ -1,10 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { List, Badge, InputItem, } from 'antd-mobile';
+import { getMsgList } from '../../redux/chat.redux';
 
 import io from 'socket.io-client';
 const socket = io('ws://localhost:3021');
 
+@connect(
+  state=> state,
+  {getMsgList}
+)
 class Chat extends React.Component {
   constructor(props) {
     super(props);
@@ -16,12 +22,15 @@ class Chat extends React.Component {
 
   componentDidMount() {
     const _this = this;
-    socket.on('recvmsg', function(data) {
-      console.log('recvmsg-data: ', data);
-      _this.setState({
-        msg: [..._this.state.msg, data.text],
-      })
-    })
+    console.log('this.props.actions.getMsgList();: ', this.props.getMsgList());
+    this.props.getMsgList();
+    
+    // socket.on('recvmsg', function(data) {
+    //   console.log('recvmsg-data: ', data);
+    //   _this.setState({
+    //     msg: [..._this.state.msg, data.text],
+    //   })
+    // })
   }
   sendMsg = () => {
     socket.emit('sendmsg', { text: this.state.text })
@@ -62,4 +71,15 @@ class Chat extends React.Component {
   }
 }
 
-export default connect(state => state)(Chat);
+function mapStateToProps(state) {
+  return state;
+}
+function mapDispatchToProps(dispatch){
+  return {
+    getMsgList: getMsgList,
+    // actions: bindActionCreators({ getMsgList }),
+  }
+}
+
+export default Chat;
+// export default connect(mapStateToProps, mapDispatchToProps)(Chat);
