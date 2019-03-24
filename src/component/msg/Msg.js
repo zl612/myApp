@@ -13,16 +13,15 @@ class Msg extends React.Component {
   }
 
   componentDidMount() {
-    const socket = io('ws://localhost:3021');
-    socket.on('news', function(data) {
-      console.log('client-data: ', data);
-      socket.emit('wwcc', { my: 'first' })
-
-    })
+    // const socket = io('ws://localhost:3021');
+    // socket.on('news', function(data) {
+    //   console.log('client-data: ', data);
+    //   socket.emit('wwcc', { my: 'first' })
+    // })
   }
 
   render () {
-     console.log('this.pro87878787222', this.props);
+    //  console.log('this.pro87878787222', this.props);
     return (
       <div className="stick-footer">
         <List>

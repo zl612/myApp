@@ -27,3 +27,10 @@ body {
 	bottom: 0;
 	width:100%;
 }
+#chat_page .chat_me .am-list-extra {
+	flex-basis: auto;
+}
+#chat_page .chat_me .am-list-content {
+	padding-right: 20px;
+	text-align: right;
+}
