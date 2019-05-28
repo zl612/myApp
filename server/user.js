@@ -3,10 +3,10 @@ const utils = require('utility');
 
 const Router = express.Router();
 
-
 const model = require('./model.js');
 // 引用模型
 const User = model.getModel('user');
+const Chat = model.getModel('chat');
 
 Router.get('/list', function(req, res) {
   // 类型为 genius 或 boss查询
@@ -83,6 +83,16 @@ Router.post('/updata', function(req, res) {
       type: doc.type,
     }, body)
     return res.json({ code: 0, data })
+  })
+})
+
+// 查询聊天列表
+Router.get('/getMsgList', function(req, res) {
+  const user = req.cookies.user;
+  Chat.find({}, function(err, doc) {
+    if(!err) {
+      return res.json({code: 0, msg: doc})
+    }
   })
 })
 

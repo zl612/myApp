@@ -13,6 +13,7 @@ const initState={
 	user:'',
   type:'',
   pwd: '',
+  // id: '',
 }
 
 // reducer

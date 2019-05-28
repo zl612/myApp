@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { List, Badge, InputItem, } from 'antd-mobile';
-import { getMsgList } from '../../redux/chat.redux';
+import { List, Badge, InputItem, NavBar } from 'antd-mobile';
+import { getMsgList, sendMsg, recvMsg } from '../../redux/chat.redux';
 
 import io from 'socket.io-client';
 const socket = io('ws://localhost:3021');
 
 @connect(
   state=> state,
-  {getMsgList}
+  {getMsgList, sendMsg, recvMsg }
 )
 class Chat extends React.Component {
   constructor(props) {
@@ -21,35 +21,33 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-    const _this = this;
-    console.log('this.props.actions.getMsgList();: ', this.props.getMsgList());
     this.props.getMsgList();
-    
-    // socket.on('recvmsg', function(data) {
-    //   console.log('recvmsg-data: ', data);
-    //   _this.setState({
-    //     msg: [..._this.state.msg, data.text],
-    //   })
-    // })
+    this.props.recvMsg();
   }
   sendMsg = () => {
-    socket.emit('sendmsg', { text: this.state.text })
+    const from = this.props.user._id;
+    const to = this.props.match.params.id;
+    this.props.sendMsg({from, to, msg: this.state.text})
     this.setState({
       text: '',
     })
   }
 
   render () {
-     console.log('this.pro87878787222', this.props);
-     console.log('thisvalue', this.state);
+     console.log('this.pro222', this.props);
      const { text, msg } = this.state;
+     const id = this.props.match.params.id
     return (
-      <div>
-        {msg.map((item, index) => {
-          return <p key={index}>{item}</p>
-          })
-        }
-     
+      <div className="chat_page">
+      <NavBar mode="dark">
+        {id}
+       </NavBar>
+
+        {this.props.chat.chatmsg.map((item, index) => {
+          return item.from ==  id ? (
+            <p key={item._id}>对方发来的：{item.content}</p>
+          ) : (<p key={item._id}>我发出的的：{item.content}</p>)
+        })}
         <div className="stick-footer">
           <List>
             <InputItem
@@ -61,7 +59,7 @@ class Chat extends React.Component {
                 })      
               }}
               extra={
-                <span onClick={this.sendMsg}>发送</span>
+                <span onClick={() =>this.sendMsg()}>发送</span>
               }
             />
           </List> 
